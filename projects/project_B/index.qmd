@@ -1,0 +1,7 @@
+---
+title: "index"
+---
+
+## リンク
+- [ドキュメント](src/document.qmd)
+- [スライド](src/slide.qmd)

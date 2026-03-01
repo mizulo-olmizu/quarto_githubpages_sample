@@ -14,7 +14,7 @@ website:
         text: Home
       - href: projects/project_A/document.qmd
         text: Project A
-      - href: projects/project_B/document.qmd
+      - href: projects/project_B/index.qmd
         text: Project B
 
 format:

@@ -1,7 +1,7 @@
 ---
 title: "分析プロジェクト一覧"
 listing:
-  contents: projects
+  contents: projects/*/*.qmd
   sort: "date desc"
   type: grid
   categories: true
