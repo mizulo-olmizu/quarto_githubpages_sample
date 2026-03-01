@@ -1,6 +1,8 @@
 ---
-title: "index"
+title: "Project B"
 ---
+
+複数のページからなるプロジェクトの例です。
 
 ## リンク
 - [ドキュメント](src/document.qmd)
