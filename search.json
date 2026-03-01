@@ -1,10 +1,45 @@
 [
   {
-    "objectID": "projects/project_B/document.html",
-    "href": "projects/project_B/document.html",
+    "objectID": "projects/project_B/index.html",
+    "href": "projects/project_B/index.html",
+    "title": "index",
+    "section": "",
+    "text": "ドキュメント\nスライド"
+  },
+  {
+    "objectID": "projects/project_B/src/document.html",
+    "href": "projects/project_B/src/document.html",
     "title": "Quarto Project B",
     "section": "",
     "text": "altairを用いたプロット\n\n\nCode\n# import altair with an abbreviated alias\nimport altair as alt\n\n# load a sample dataset as a pandas DataFrame\nfrom altair.datasets import data\n\ncars = data.cars()\n\n# make the chart\nalt.Chart(cars).mark_point().encode(\n    x=\"Horsepower\",\n    y=\"Miles_per_Gallon\",\n    color=\"Origin\",\n).interactive()\n\n\n\n\n\n\n\n\n\n\nCode\nimport altair as alt\nimport numpy as np\nimport pandas as pd\n\n# Compute x^2 + y^2 across a 2D grid\nx, y = np.meshgrid(range(-5, 5), range(-5, 5))\nz = x**2 + y**2\n\n# Convert this grid to columnar data expected by Altair\nsource = pd.DataFrame({\"x\": x.ravel(), \"y\": y.ravel(), \"z\": z.ravel()})\n\nalt.Chart(source).mark_rect().encode(x=\"x:O\", y=\"y:O\", color=\"z:Q\")"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#getting-up",
+    "href": "projects/project_B/src/slide.html#getting-up",
+    "title": "Habits",
+    "section": "Getting up",
+    "text": "Getting up\n\nTurn off alarm\nGet out of bed"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#breakfast",
+    "href": "projects/project_B/src/slide.html#breakfast",
+    "title": "Habits",
+    "section": "Breakfast",
+    "text": "Breakfast\n\nEat eggs\nDrink coffee"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#dinner",
+    "href": "projects/project_B/src/slide.html#dinner",
+    "title": "Habits",
+    "section": "Dinner",
+    "text": "Dinner\n\nEat spaghetti\nDrink wine"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#going-to-sleep",
+    "href": "projects/project_B/src/slide.html#going-to-sleep",
+    "title": "Habits",
+    "section": "Going to sleep",
+    "text": "Going to sleep\n\nGet in bed\nCount sheep"
   },
   {
     "objectID": "projects/project_A/document.html",
@@ -18,6 +53,6 @@
     "href": "index.html",
     "title": "分析プロジェクト一覧",
     "section": "",
-    "text": "このサイトでは、私のデータ分析プロジェクトの成果を公開しています。 以下のカードから各分析の詳細を確認できます。\n\n\n\n\n\n\n\n\n\n\n\nQuarto Project B\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuarto Project A\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "このサイトでは、私のデータ分析プロジェクトの成果を公開しています。 以下のカードから各分析の詳細を確認できます。\n\n\n\n\n\n\n\n\n\n\n\nQuarto Project A\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nindex\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]

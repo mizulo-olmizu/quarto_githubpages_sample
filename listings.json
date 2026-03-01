@@ -2,8 +2,8 @@
   {
     "listing": "/index.html",
     "items": [
-      "/projects/project_B/document.html",
-      "/projects/project_A/document.html"
+      "/projects/project_A/document.html",
+      "/projects/project_B/index.html"
     ]
   }
 ]

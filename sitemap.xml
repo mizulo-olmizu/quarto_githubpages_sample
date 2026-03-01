@@ -1,15 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_B/document.html</loc>
-    <lastmod>2026-03-01T15:39:59.844Z</lastmod>
+    <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_B/index.html</loc>
+    <lastmod>2026-03-01T17:07:03.100Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_B/src/document.html</loc>
+    <lastmod>2026-03-01T17:07:06.043Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_B/src/slide.html</loc>
+    <lastmod>2026-03-01T17:07:06.510Z</lastmod>
   </url>
   <url>
     <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_A/document.html</loc>
-    <lastmod>2026-03-01T15:40:00.213Z</lastmod>
+    <lastmod>2026-03-01T17:07:06.874Z</lastmod>
   </url>
   <url>
     <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/index.html</loc>
-    <lastmod>2026-03-01T15:40:00.509Z</lastmod>
+    <lastmod>2026-03-01T17:07:07.180Z</lastmod>
   </url>
 </urlset>
