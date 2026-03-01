@@ -1,0 +1,23 @@
+[
+  {
+    "objectID": "projects/project_B/document.html",
+    "href": "projects/project_B/document.html",
+    "title": "Quarto Project B",
+    "section": "",
+    "text": "altairを用いたプロット\n\n\nCode\n# import altair with an abbreviated alias\nimport altair as alt\n\n# load a sample dataset as a pandas DataFrame\nfrom altair.datasets import data\n\ncars = data.cars()\n\n# make the chart\nalt.Chart(cars).mark_point().encode(\n    x=\"Horsepower\",\n    y=\"Miles_per_Gallon\",\n    color=\"Origin\",\n).interactive()"
+  },
+  {
+    "objectID": "projects/project_A/document.html",
+    "href": "projects/project_A/document.html",
+    "title": "Quarto Project A",
+    "section": "",
+    "text": "matplotlibを用いたプロット\n\n\nCode\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nr = np.arange(0, 2, 0.01)\ntheta = 2 * np.pi * r\nfig, ax = plt.subplots(subplot_kw={\"projection\": \"polar\"})\nax.plot(theta, r)\nax.set_rticks([0.5, 1, 1.5, 2])\nax.grid(True)\nplt.show()\n\n\n\n\n\nFigure 1: A line plot on a polar axis"
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "分析プロジェクト一覧",
+    "section": "",
+    "text": "このサイトでは、私のデータ分析プロジェクトの成果を公開しています。 以下のカードから各分析の詳細を確認できます。\n\n\n\n\n\n\n\n\n\n\n\nQuarto Project B\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nQuarto Project A\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+  }
+]

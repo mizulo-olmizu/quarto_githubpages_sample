@@ -1,0 +1,1 @@
+Sitemap: https://mizulo-olmizu.github.io/quarto_githubpages_sample/sitemap.xml
