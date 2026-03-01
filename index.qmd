@@ -1,0 +1,11 @@
+---
+title: "分析プロジェクト一覧"
+listing:
+  contents: projects
+  sort: "date desc"
+  type: grid
+  categories: true
+---
+
+このサイトでは、私のデータ分析プロジェクトの成果を公開しています。
+以下のカードから各分析の詳細を確認できます。
