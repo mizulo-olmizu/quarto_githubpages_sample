@@ -4,7 +4,7 @@
     "href": "projects/project_B/document.html",
     "title": "Quarto Project B",
     "section": "",
-    "text": "altairを用いたプロット\n\n\nCode\n# import altair with an abbreviated alias\nimport altair as alt\n\n# load a sample dataset as a pandas DataFrame\nfrom altair.datasets import data\n\ncars = data.cars()\n\n# make the chart\nalt.Chart(cars).mark_point().encode(\n    x=\"Horsepower\",\n    y=\"Miles_per_Gallon\",\n    color=\"Origin\",\n).interactive()"
+    "text": "altairを用いたプロット\n\n\nCode\n# import altair with an abbreviated alias\nimport altair as alt\n\n# load a sample dataset as a pandas DataFrame\nfrom altair.datasets import data\n\ncars = data.cars()\n\n# make the chart\nalt.Chart(cars).mark_point().encode(\n    x=\"Horsepower\",\n    y=\"Miles_per_Gallon\",\n    color=\"Origin\",\n).interactive()\n\n\n\n\n\n\n\n\n\n\nCode\nimport altair as alt\nimport numpy as np\nimport pandas as pd\n\n# Compute x^2 + y^2 across a 2D grid\nx, y = np.meshgrid(range(-5, 5), range(-5, 5))\nz = x**2 + y**2\n\n# Convert this grid to columnar data expected by Altair\nsource = pd.DataFrame({\"x\": x.ravel(), \"y\": y.ravel(), \"z\": z.ravel()})\n\nalt.Chart(source).mark_rect().encode(x=\"x:O\", y=\"y:O\", color=\"z:Q\")"
   },
   {
     "objectID": "projects/project_A/document.html",
