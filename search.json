@@ -2,9 +2,16 @@
   {
     "objectID": "projects/project_B/index.html",
     "href": "projects/project_B/index.html",
-    "title": "index",
+    "title": "Project B",
     "section": "",
-    "text": "ドキュメント\nスライド"
+    "text": "複数のページからなるプロジェクトの例です。"
+  },
+  {
+    "objectID": "projects/project_B/index.html#リンク",
+    "href": "projects/project_B/index.html#リンク",
+    "title": "Project B",
+    "section": "1 リンク",
+    "text": "1 リンク\n\nドキュメント\nスライド"
   },
   {
     "objectID": "projects/project_B/src/document.html",
@@ -53,6 +60,6 @@
     "href": "index.html",
     "title": "分析プロジェクト一覧",
     "section": "",
-    "text": "このサイトでは、私のデータ分析プロジェクトの成果を公開しています。 以下のカードから各分析の詳細を確認できます。\n\n\n\n\n\n\n\n\n\n\n\nQuarto Project A\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nindex\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
+    "text": "このサイトでは、私のデータ分析プロジェクトの成果を公開しています。 以下のカードから各分析の詳細を確認できます。\n\n\n\n\n\n\n\n\n\n\n\nQuarto Project A\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProject B\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
   }
 ]
