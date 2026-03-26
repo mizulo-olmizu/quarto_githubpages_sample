@@ -8,18 +8,16 @@ execute:
 website:
   title: "Data Analysis Portfolio"
   description: "私の分析プロジェクト集"
+  repo-url: https://github.com/mizulo-olmizu/quarto_githubpages_sample
+  repo-actions: [source]
   navbar:
     left:
       - href: index.qmd
         text: Home
-      - href: projects/project_A/document.qmd
-        text: Project A
-      - href: projects/project_B/index.qmd
-        text: Project B
 
 format:
   html:
-    theme: cosmo        # 清潔感のあるテーマ
-    toc: true           # 目次を表示
+    theme: cosmo # 清潔感のあるテーマ
+    toc: true # 目次を表示
     number-sections: true
-    code-fold: true     # コードを折りたたみ可能にする
+    code-fold: true # コードを折りたたみ可能にする

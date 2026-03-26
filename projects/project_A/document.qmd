@@ -1,25 +1,140 @@
 ---
-title: "Quarto Project A"
+title: "ペンギン種の形態比較分析"
 format:
   html:
     code-fold: true
-jupyter: python3
+jupyter: project_a
 ---
 
-matplotlibを用いたプロット
+## 分析の背景と目的
+
+パーマー基地周辺に生息する3種のペンギン（Adelie・Chinstrap・Gentoo）の形態データを用いて、
+種ごとの身体的特徴の違いを明らかにします。
+
+1. **種ごとの体格差はどの程度か？**
+2. **くちばしの形状で種を判別できるか？**
+3. **体重と各部位のサイズにはどのような関係があるか？**
 
 ```{python}
-# | label: fig-polar
-# | fig-cap: "A line plot on a polar axis"
-
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 
-r = np.arange(0, 2, 0.01)
-theta = 2 * np.pi * r
-fig, ax = plt.subplots(subplot_kw={"projection": "polar"})
-ax.plot(theta, r)
-ax.set_rticks([0.5, 1, 1.5, 2])
-ax.grid(True)
+plt.rcParams["font.family"] = "Hiragino Sans"
+sns.set_theme(style="whitegrid", rc={"font.family": "Hiragino Sans"})
+penguins = sns.load_dataset("penguins").dropna()
+```
+
+## 1. 種ごとの体格概況
+
+### データの概要
+
+```{python}
+penguins.groupby("species")[
+    ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
+].describe().round(1)
+```
+
+### 体重の分布
+
+```{python}
+#| fig-cap: "種ごとの体重分布"
+fig, ax = plt.subplots(figsize=(8, 4))
+sns.violinplot(data=penguins, x="species", y="body_mass_g", hue="species", ax=ax)
+ax.set_xlabel("種")
+ax.set_ylabel("体重 (g)")
+ax.set_title("種ごとの体重分布")
+plt.tight_layout()
 plt.show()
 ```
+
+Gentooが最も大型で、AdelieとChinstrapは同程度の体重です。
+
+## 2. くちばしの形状による種の判別
+
+くちばしの長さと深さの関係を見ると、3種が明確に分離します。
+
+```{python}
+#| fig-cap: "くちばしの長さ vs 深さ"
+fig, ax = plt.subplots(figsize=(8, 6))
+sns.scatterplot(
+    data=penguins, x="bill_length_mm", y="bill_depth_mm",
+    hue="species", style="species", s=60, ax=ax,
+)
+ax.set_xlabel("くちばし長さ (mm)")
+ax.set_ylabel("くちばし深さ (mm)")
+ax.set_title("くちばしの形状による種の分離")
+plt.tight_layout()
+plt.show()
+```
+
+### 種ごとのくちばし形状分布
+
+```{python}
+#| fig-cap: "くちばしの長さ・深さの同時分布"
+g = sns.jointplot(
+    data=penguins, x="bill_length_mm", y="bill_depth_mm",
+    hue="species", kind="kde", height=6,
+)
+g.set_axis_labels("くちばし長さ (mm)", "くちばし深さ (mm)")
+plt.suptitle("種ごとのくちばし形状 KDE", y=1.02)
+plt.show()
+```
+
+- **Adelie**: 短く深いくちばし
+- **Chinstrap**: 長く深いくちばし
+- **Gentoo**: 長く浅いくちばし
+
+## 3. 体重と各部位の関係
+
+### ペアプロット
+
+```{python}
+#| fig-cap: "形態変数のペアプロット"
+g = sns.pairplot(
+    penguins,
+    vars=["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"],
+    hue="species", height=2.2, plot_kws={"s": 20, "alpha": 0.6},
+)
+g.figure.suptitle("形態変数のペアプロット", y=1.01)
+plt.show()
+```
+
+### フリッパー長 vs 体重
+
+```{python}
+#| fig-cap: "フリッパー長と体重の関係"
+fig, ax = plt.subplots(figsize=(8, 5))
+sns.regplot(data=penguins, x="flipper_length_mm", y="body_mass_g", scatter=False, color="gray", ax=ax)
+sns.scatterplot(data=penguins, x="flipper_length_mm", y="body_mass_g", hue="species", s=50, ax=ax)
+ax.set_xlabel("フリッパー長 (mm)")
+ax.set_ylabel("体重 (g)")
+ax.set_title("フリッパー長と体重：強い正の相関")
+plt.tight_layout()
+plt.show()
+```
+
+### 相関ヒートマップ
+
+```{python}
+#| fig-cap: "形態変数間の相関行列"
+num_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
+labels = ["くちばし長", "くちばし深", "フリッパー長", "体重"]
+corr = penguins[num_cols].corr()
+corr.index = labels
+corr.columns = labels
+
+fig, ax = plt.subplots(figsize=(6, 5))
+sns.heatmap(corr, annot=True, fmt=".2f", cmap="RdBu_r", vmin=-1, vmax=1, square=True, ax=ax)
+ax.set_title("形態変数間の相関")
+plt.tight_layout()
+plt.show()
+```
+
+## まとめ
+
+- **Gentoo**は大型で、フリッパーが長く、くちばしが浅い
+- **Adelie**は小型で、くちばしが短く深い
+- **Chinstrap**はAdelieに近い体格だが、くちばしが長い
+- くちばしの長さ×深さだけで3種をほぼ判別可能
+- フリッパー長と体重には強い正の相関がある
