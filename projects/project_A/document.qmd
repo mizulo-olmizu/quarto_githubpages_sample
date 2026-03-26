@@ -3,7 +3,7 @@ title: "ペンギン種の形態比較分析"
 format:
   html:
     code-fold: true
-jupyter: project_a
+jupyter: python3
 ---
 
 ## 分析の背景と目的
@@ -38,7 +38,7 @@ penguins.groupby("species")[
 ### 体重の分布
 
 ```{python}
-#| fig-cap: "種ごとの体重分布"
+# | fig-cap: "種ごとの体重分布"
 fig, ax = plt.subplots(figsize=(8, 4))
 sns.violinplot(data=penguins, x="species", y="body_mass_g", hue="species", ax=ax)
 ax.set_xlabel("種")
@@ -55,11 +55,16 @@ Gentooが最も大型で、AdelieとChinstrapは同程度の体重です。
 くちばしの長さと深さの関係を見ると、3種が明確に分離します。
 
 ```{python}
-#| fig-cap: "くちばしの長さ vs 深さ"
+# | fig-cap: "くちばしの長さ vs 深さ"
 fig, ax = plt.subplots(figsize=(8, 6))
 sns.scatterplot(
-    data=penguins, x="bill_length_mm", y="bill_depth_mm",
-    hue="species", style="species", s=60, ax=ax,
+    data=penguins,
+    x="bill_length_mm",
+    y="bill_depth_mm",
+    hue="species",
+    style="species",
+    s=60,
+    ax=ax,
 )
 ax.set_xlabel("くちばし長さ (mm)")
 ax.set_ylabel("くちばし深さ (mm)")
@@ -71,10 +76,14 @@ plt.show()
 ### 種ごとのくちばし形状分布
 
 ```{python}
-#| fig-cap: "くちばしの長さ・深さの同時分布"
+# | fig-cap: "くちばしの長さ・深さの同時分布"
 g = sns.jointplot(
-    data=penguins, x="bill_length_mm", y="bill_depth_mm",
-    hue="species", kind="kde", height=6,
+    data=penguins,
+    x="bill_length_mm",
+    y="bill_depth_mm",
+    hue="species",
+    kind="kde",
+    height=6,
 )
 g.set_axis_labels("くちばし長さ (mm)", "くちばし深さ (mm)")
 plt.suptitle("種ごとのくちばし形状 KDE", y=1.02)
@@ -90,11 +99,13 @@ plt.show()
 ### ペアプロット
 
 ```{python}
-#| fig-cap: "形態変数のペアプロット"
+# | fig-cap: "形態変数のペアプロット"
 g = sns.pairplot(
     penguins,
     vars=["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"],
-    hue="species", height=2.2, plot_kws={"s": 20, "alpha": 0.6},
+    hue="species",
+    height=2.2,
+    plot_kws={"s": 20, "alpha": 0.6},
 )
 g.figure.suptitle("形態変数のペアプロット", y=1.01)
 plt.show()
@@ -103,10 +114,19 @@ plt.show()
 ### フリッパー長 vs 体重
 
 ```{python}
-#| fig-cap: "フリッパー長と体重の関係"
+# | fig-cap: "フリッパー長と体重の関係"
 fig, ax = plt.subplots(figsize=(8, 5))
-sns.regplot(data=penguins, x="flipper_length_mm", y="body_mass_g", scatter=False, color="gray", ax=ax)
-sns.scatterplot(data=penguins, x="flipper_length_mm", y="body_mass_g", hue="species", s=50, ax=ax)
+sns.regplot(
+    data=penguins,
+    x="flipper_length_mm",
+    y="body_mass_g",
+    scatter=False,
+    color="gray",
+    ax=ax,
+)
+sns.scatterplot(
+    data=penguins, x="flipper_length_mm", y="body_mass_g", hue="species", s=50, ax=ax
+)
 ax.set_xlabel("フリッパー長 (mm)")
 ax.set_ylabel("体重 (g)")
 ax.set_title("フリッパー長と体重：強い正の相関")
@@ -117,7 +137,7 @@ plt.show()
 ### 相関ヒートマップ
 
 ```{python}
-#| fig-cap: "形態変数間の相関行列"
+# | fig-cap: "形態変数間の相関行列"
 num_cols = ["bill_length_mm", "bill_depth_mm", "flipper_length_mm", "body_mass_g"]
 labels = ["くちばし長", "くちばし深", "フリッパー長", "体重"]
 corr = penguins[num_cols].corr()
@@ -125,7 +145,9 @@ corr.index = labels
 corr.columns = labels
 
 fig, ax = plt.subplots(figsize=(6, 5))
-sns.heatmap(corr, annot=True, fmt=".2f", cmap="RdBu_r", vmin=-1, vmax=1, square=True, ax=ax)
+sns.heatmap(
+    corr, annot=True, fmt=".2f", cmap="RdBu_r", vmin=-1, vmax=1, square=True, ax=ax
+)
 ax.set_title("形態変数間の相関")
 plt.tight_layout()
 plt.show()

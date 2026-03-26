@@ -14,17 +14,8 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v4
 
-      - name: Install uv
-        uses: astral-sh/setup-uv@v4
-
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
-
-      - name: Set up Python environment
-        run: |
-          uv sync
-          uv run ipython kernel install --user --name=quarto_githubpages_sample
-          source .venv/bin/activate
 
       - name: Render and Publish
         uses: quarto-dev/quarto-actions/publish@v2

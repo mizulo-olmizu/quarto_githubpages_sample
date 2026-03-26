@@ -2,7 +2,7 @@
 title: "自動車市場の燃費分析"
 author: "Project B"
 format: revealjs
-jupyter: project_b
+jupyter: python3
 ---
 
 # 分析の背景と目的
@@ -19,7 +19,7 @@ jupyter: project_b
 3. 年代とともに燃費はどう変化したか？
 
 ```{python}
-#| echo: false
+# | echo: false
 import altair as alt
 import polars as pl
 from great_tables import GT
@@ -37,7 +37,7 @@ cars = (
 ## 基本統計量
 
 ```{python}
-#| echo: false
+# | echo: false
 summary = (
     cars.group_by("Origin")
     .agg(
@@ -71,7 +71,7 @@ summary = (
 
 ::: {.column width="50%"}
 ```{python}
-#| echo: false
+# | echo: false
 alt.Chart(cars).mark_boxplot(extent="min-max").encode(
     x="Origin:N",
     y=alt.Y("Miles_per_Gallon:Q", title="Miles per Gallon"),
@@ -87,7 +87,7 @@ alt.Chart(cars).mark_boxplot(extent="min-max").encode(
 ## 馬力 vs 燃費
 
 ```{python}
-#| echo: false
+# | echo: false
 brush = alt.selection_interval()
 
 alt.Chart(cars).mark_circle(size=60).encode(
@@ -96,14 +96,23 @@ alt.Chart(cars).mark_circle(size=60).encode(
     color="Origin:N",
     opacity=alt.when(brush).then(alt.value(1)).otherwise(alt.value(0.2)),
     tooltip=["Name", "Horsepower", "Miles_per_Gallon", "Year"],
-).add_params(brush).properties(width=700, height=450, title="馬力と燃費の関係（ドラッグで選択）")
+).add_params(brush).properties(
+    width=700, height=450, title="馬力と燃費の関係（ドラッグで選択）"
+)
 ```
 
 ## 相関分析
 
 ```{python}
-#| echo: false
-num_cols = ["Miles_per_Gallon", "Cylinders", "Displacement", "Horsepower", "Weight_in_lbs", "Acceleration"]
+# | echo: false
+num_cols = [
+    "Miles_per_Gallon",
+    "Cylinders",
+    "Displacement",
+    "Horsepower",
+    "Weight_in_lbs",
+    "Acceleration",
+]
 labels = ["燃費", "気筒数", "排気量", "馬力", "重量", "加速性能"]
 
 corr_data = (
@@ -116,7 +125,9 @@ corr_data = (
 (
     GT(corr_data, rowname_col="")
     .fmt_number(columns=labels, decimals=2)
-    .data_color(columns=labels, palette=["#2166ac", "#f7f7f7", "#b2182b"], domain=[-1, 1])
+    .data_color(
+        columns=labels, palette=["#2166ac", "#f7f7f7", "#b2182b"], domain=[-1, 1]
+    )
     .tab_header(title="スペック間の相関行列")
 )
 ```
@@ -132,7 +143,7 @@ corr_data = (
 ## 地域×年代の推移
 
 ```{python}
-#| echo: false
+# | echo: false
 trend = cars.group_by(["Year", "Origin"]).agg(pl.col("Miles_per_Gallon").mean())
 
 alt.Chart(trend).mark_line(point=True).encode(
@@ -146,7 +157,7 @@ alt.Chart(trend).mark_line(point=True).encode(
 ## 燃費推移スパークライン
 
 ```{python}
-#| echo: false
+# | echo: false
 yearly_avg = (
     cars.group_by(["Origin", "Year"])
     .agg(pl.col("Miles_per_Gallon").mean().round(1))
