@@ -3,7 +3,7 @@ title: "自動車市場の燃費分析"
 format:
   html:
     code-fold: true
-jupyter: project_b
+jupyter: python3
 ---
 
 ## 分析の背景と目的
@@ -89,16 +89,27 @@ alt.Chart(cars).mark_circle(size=60).encode(
 ### 相関分析
 
 ```{python}
-num_cols = ["Miles_per_Gallon", "Cylinders", "Displacement", "Horsepower", "Weight_in_lbs", "Acceleration"]
+num_cols = [
+    "Miles_per_Gallon",
+    "Cylinders",
+    "Displacement",
+    "Horsepower",
+    "Weight_in_lbs",
+    "Acceleration",
+]
 labels = ["燃費", "気筒数", "排気量", "馬力", "重量", "加速性能"]
 
 corr_matrix = cars.select(pl.col(num_cols).cast(pl.Float64)).corr()
-corr_data = corr_matrix.rename(dict(zip(num_cols, labels))).with_columns(pl.Series("", labels))
+corr_data = corr_matrix.rename(dict(zip(num_cols, labels))).with_columns(
+    pl.Series("", labels)
+)
 
 (
     GT(corr_data, rowname_col="")
     .fmt_number(columns=labels, decimals=2)
-    .data_color(columns=labels, palette=["#2166ac", "#f7f7f7", "#b2182b"], domain=[-1, 1])
+    .data_color(
+        columns=labels, palette=["#2166ac", "#f7f7f7", "#b2182b"], domain=[-1, 1]
+    )
     .tab_header(title="スペック間の相関行列")
 )
 ```
@@ -147,7 +158,9 @@ spark_df = pl.DataFrame(spark_data)
 
 (
     GT(spark_df)
-    .tab_header(title="地域別 燃費推移スパークライン", subtitle="1970〜1982年の平均燃費")
+    .tab_header(
+        title="地域別 燃費推移スパークライン", subtitle="1970〜1982年の平均燃費"
+    )
     .fmt_nanoplot("燃費推移", plot_type="line")
     .fmt_number("後期-前期差", decimals=1)
     .data_color(columns="後期-前期差", palette=["#fee0d2", "#41ab5d"])
