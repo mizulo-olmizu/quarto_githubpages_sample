@@ -1,107 +1,184 @@
 ---
-title: "Habits"
-author: "John Doe"
+title: "自動車市場の燃費分析"
+author: "Project B"
 format: revealjs
+jupyter: project_b
 ---
 
-# In the morning
+# 分析の背景と目的
 
-## Getting up
+## 背景
 
-- Turn off alarm
-- Get out of bed
+- 1970〜80年代、オイルショックにより燃費性能が重要な競争要因に
+- 米国・欧州・日本の3地域で異なる設計思想
 
-## Breakfast
+## 分析の問い
 
-- Eat eggs
-- Drink coffee
-
-# In the evening
-
-## Dinner
-
-- Eat spaghetti
-- Drink wine
-
-## Going to sleep
-
-- Get in bed
-- Count sheep
-
-## Plot
-
-[Confidence Interval Ellipses](https://altair-viz.github.io/gallery/deviation_ellipses.html)
+1. 地域間で燃費にどの程度の差があるか？
+2. 燃費を決定づける要因は何か？
+3. 年代とともに燃費はどう変化したか？
 
 ```{python}
-import numpy as np
-import pandas as pd
-from scipy.stats import f as F
-
+#| echo: false
 import altair as alt
-from altair.datasets import data
+import polars as pl
+from great_tables import GT
+from vega_datasets import data as vdata
 
-
-def confidence_region_2d(arr, conf_level=0.95, segments=50):
-    """
-    Calculate confidence interval ellipse.
-
-    Parameters
-    ----------
-    arr
-        numpy array with 2 columns
-    conf_level
-        lower tail probability
-    segments
-        number of points describing the ellipse.
-    """
-    n_elements = len(arr)
-    # Degrees of freedom of the chi-squared distribution in the **numerator**
-    dfn = 2
-    # Degrees of freedom of the chi-squared distribution in the **denominator**
-    dfd = n_elements - 1
-    # Percent point function at `conf_level` of an F continuous random variable
-    quantile = F.ppf(conf_level, dfn=dfn, dfd=dfd)
-    radius = np.sqrt(2 * quantile)
-    angles = np.arange(0, segments) * 2 * np.pi / segments
-    circle = np.column_stack((np.cos(angles), np.sin(angles)))
-    center = np.mean(arr, axis=0)
-    cov_mat = np.cov(arr, rowvar=False)
-    return center + radius * (circle @ np.linalg.cholesky(cov_mat).T)
-
-
-def grouped_confidence_regions(df, col_x, col_y, col_group):
-    cols = [col_x, col_y]
-    ellipses = []
-    ser: pd.Series[float] = df[col_group]
-    for group in ser.drop_duplicates():
-        arr = df.loc[ser == group, cols].to_numpy(dtype=np.float64)
-        ellipse = pd.DataFrame(confidence_region_2d(arr), columns=cols)
-        ellipse[col_group] = group
-        ellipses.append(ellipse)
-    return pd.concat(ellipses).reset_index(names="order")
-
-
-col_x = "Flipper Length (mm)"
-col_y = "Body Mass (g)"
-col_group = "Species"
-
-x = alt.X(col_x).scale(zero=False)
-y = alt.Y(col_y).scale(zero=False)
-color = alt.Color(col_group)
-
-source = data.penguins().dropna(subset=[col_x, col_y, col_group])
-ellipse = grouped_confidence_regions(
-    source, col_x=col_x, col_y=col_y, col_group=col_group
+cars = (
+    pl.read_json(vdata.cars.filepath)
+    .with_columns(pl.col("Year").str.slice(0, 4).cast(pl.Int32).alias("Year"))
+    .drop_nulls()
 )
-points = (
-    alt.Chart(source).mark_circle(size=50, tooltip=True).encode(x=x, y=y, color=color)
-)
-lines = (
-    alt.Chart(ellipse)
-    .mark_line(filled=True, fillOpacity=0.2)
-    .encode(x=x, y=y, color=color, order="order")
-)
-
-chart = (lines + points).properties(height=400, width=700)
-chart
 ```
+
+# 1. 地域別の燃費概況
+
+## 基本統計量
+
+```{python}
+#| echo: false
+summary = (
+    cars.group_by("Origin")
+    .agg(
+        pl.col("Miles_per_Gallon").count().alias("台数"),
+        pl.col("Miles_per_Gallon").mean().alias("平均燃費"),
+        pl.col("Miles_per_Gallon").median().alias("中央値"),
+        pl.col("Horsepower").mean().alias("平均馬力"),
+        (pl.col("Weight_in_lbs").cast(pl.Float64) * 0.4536).mean().alias("平均重量kg"),
+    )
+    .sort("Origin")
+    .rename({"Origin": "地域"})
+)
+
+(
+    GT(summary)
+    .tab_header(title="地域別 自動車スペック概要")
+    .fmt_number(columns=["平均燃費", "中央値", "平均馬力", "平均重量kg"], decimals=1)
+    .data_color(columns="平均燃費", palette=["#fee0d2", "#de2d26"])
+)
+```
+
+## 燃費の分布
+
+:::: {.columns}
+
+::: {.column width="50%"}
+- 日本車が最も燃費に優れる
+- 米国車は馬力・重量が大きく燃費が低い
+- 欧州車は中間的な位置づけ
+:::
+
+::: {.column width="50%"}
+```{python}
+#| echo: false
+alt.Chart(cars).mark_boxplot(extent="min-max").encode(
+    x="Origin:N",
+    y=alt.Y("Miles_per_Gallon:Q", title="Miles per Gallon"),
+    color="Origin:N",
+).properties(width=400, height=350, title="地域別 燃費分布")
+```
+:::
+
+::::
+
+# 2. 燃費の決定要因
+
+## 馬力 vs 燃費
+
+```{python}
+#| echo: false
+brush = alt.selection_interval()
+
+alt.Chart(cars).mark_circle(size=60).encode(
+    x=alt.X("Horsepower:Q"),
+    y=alt.Y("Miles_per_Gallon:Q", title="MPG"),
+    color="Origin:N",
+    opacity=alt.when(brush).then(alt.value(1)).otherwise(alt.value(0.2)),
+    tooltip=["Name", "Horsepower", "Miles_per_Gallon", "Year"],
+).add_params(brush).properties(width=700, height=450, title="馬力と燃費の関係（ドラッグで選択）")
+```
+
+## 相関分析
+
+```{python}
+#| echo: false
+num_cols = ["Miles_per_Gallon", "Cylinders", "Displacement", "Horsepower", "Weight_in_lbs", "Acceleration"]
+labels = ["燃費", "気筒数", "排気量", "馬力", "重量", "加速性能"]
+
+corr_data = (
+    cars.select(pl.col(num_cols).cast(pl.Float64))
+    .corr()
+    .rename(dict(zip(num_cols, labels)))
+    .with_columns(pl.Series("", labels))
+)
+
+(
+    GT(corr_data, rowname_col="")
+    .fmt_number(columns=labels, decimals=2)
+    .data_color(columns=labels, palette=["#2166ac", "#f7f7f7", "#b2182b"], domain=[-1, 1])
+    .tab_header(title="スペック間の相関行列")
+)
+```
+
+## 要因のまとめ
+
+- 燃費と最も強い負の相関：**車両重量**
+- 次いで排気量・馬力が続く
+- 加速性能は燃費と正の相関（軽い車ほど加速も良い）
+
+# 3. 年代別の燃費トレンド
+
+## 地域×年代の推移
+
+```{python}
+#| echo: false
+trend = cars.group_by(["Year", "Origin"]).agg(pl.col("Miles_per_Gallon").mean())
+
+alt.Chart(trend).mark_line(point=True).encode(
+    x=alt.X("Year:O", title="年"),
+    y=alt.Y("Miles_per_Gallon:Q", title="平均燃費 (MPG)"),
+    color="Origin:N",
+    tooltip=["Year", "Origin", alt.Tooltip("Miles_per_Gallon:Q", format=".1f")],
+).properties(width=700, height=400, title="年代別 平均燃費の推移")
+```
+
+## 燃費推移スパークライン
+
+```{python}
+#| echo: false
+yearly_avg = (
+    cars.group_by(["Origin", "Year"])
+    .agg(pl.col("Miles_per_Gallon").mean().round(1))
+    .sort("Year")
+)
+
+spark_data = []
+for origin in cars["Origin"].unique().sort().to_list():
+    vals = yearly_avg.filter(pl.col("Origin") == origin)["Miles_per_Gallon"].to_list()
+    line = " ".join(str(v) for v in vals)
+    g = cars.filter(pl.col("Origin") == origin)
+    diff = round(
+        g.filter(pl.col("Year") >= 1978)["Miles_per_Gallon"].mean()
+        - g.filter(pl.col("Year") < 1975)["Miles_per_Gallon"].mean(),
+        1,
+    )
+    spark_data.append({"地域": origin, "燃費推移": line, "後期-前期差": diff})
+
+(
+    GT(pl.DataFrame(spark_data))
+    .tab_header(title="地域別 燃費推移", subtitle="1970〜1982年")
+    .fmt_nanoplot("燃費推移", plot_type="line")
+    .fmt_number("後期-前期差", decimals=1)
+    .data_color(columns="後期-前期差", palette=["#fee0d2", "#41ab5d"])
+)
+```
+
+# まとめ
+
+## 結論
+
+- **日本車**：一貫して高い燃費性能、後期にさらに改善
+- **米国車**：重量・排気量が大きく燃費が低いが、後期に改善傾向
+- **欧州車**：中間的な位置づけ、バランスの取れたスペック
+- 燃費に最も影響する要因は**車両重量**

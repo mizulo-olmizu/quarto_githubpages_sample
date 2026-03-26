@@ -1,41 +1,162 @@
 ---
-title: "Quarto Project B"
+title: "自動車市場の燃費分析"
 format:
   html:
     code-fold: true
-jupyter: python3
+jupyter: project_b
 ---
 
-altairを用いたプロット
+## 分析の背景と目的
 
-```{python}
-# import altair with an abbreviated alias
-import altair as alt
+1970〜80年代の自動車市場では、オイルショックを背景に燃費性能が重要な競争要因となりました。
+本分析では、米国・欧州・日本の3地域の自動車データを用いて、以下の問いに答えます。
 
-# load a sample dataset as a pandas DataFrame
-from altair.datasets import data
-
-cars = data.cars()
-
-# make the chart
-alt.Chart(cars).mark_point().encode(
-    x="Horsepower",
-    y="Miles_per_Gallon",
-    color="Origin",
-).interactive()
-```
+1. **地域間で燃費にどの程度の差があるか？**
+2. **燃費を決定づける要因は何か？**
+3. **年代とともに燃費はどう変化したか？**
 
 ```{python}
 import altair as alt
-import numpy as np
-import pandas as pd
+import polars as pl
+from great_tables import GT
+from vega_datasets import data as vdata
 
-# Compute x^2 + y^2 across a 2D grid
-x, y = np.meshgrid(range(-5, 5), range(-5, 5))
-z = x**2 + y**2
-
-# Convert this grid to columnar data expected by Altair
-source = pd.DataFrame({"x": x.ravel(), "y": y.ravel(), "z": z.ravel()})
-
-alt.Chart(source).mark_rect().encode(x="x:O", y="y:O", color="z:Q")
+cars = (
+    pl.read_json(vdata.cars.filepath)
+    .with_columns(pl.col("Year").str.slice(0, 4).cast(pl.Int32).alias("Year"))
+    .drop_nulls()
+)
 ```
+
+## 1. 地域別の燃費概況
+
+まず、地域ごとの基本統計量を確認します。
+
+```{python}
+summary = (
+    cars.group_by("Origin")
+    .agg(
+        pl.col("Miles_per_Gallon").count().alias("台数"),
+        pl.col("Miles_per_Gallon").mean().alias("平均燃費"),
+        pl.col("Miles_per_Gallon").median().alias("中央値"),
+        pl.col("Miles_per_Gallon").min().alias("最小"),
+        pl.col("Miles_per_Gallon").max().alias("最大"),
+        pl.col("Horsepower").mean().alias("平均馬力"),
+        (pl.col("Weight_in_lbs").cast(pl.Float64) * 0.4536).mean().alias("平均重量kg"),
+    )
+    .sort("Origin")
+    .rename({"Origin": "地域"})
+)
+
+(
+    GT(summary)
+    .tab_header(title="地域別 自動車スペック概要")
+    .fmt_number(columns=["平均燃費", "中央値", "平均馬力", "平均重量kg"], decimals=1)
+    .data_color(columns="平均燃費", palette=["#fee0d2", "#de2d26"])
+)
+```
+
+日本車が最も燃費に優れ、米国車は馬力・重量ともに大きく燃費が低い傾向が読み取れます。
+
+### 燃費の分布
+
+```{python}
+alt.Chart(cars).mark_boxplot(extent="min-max").encode(
+    x="Origin:N",
+    y=alt.Y("Miles_per_Gallon:Q", title="Miles per Gallon"),
+    color="Origin:N",
+).properties(width=400, height=300, title="地域別 燃費分布")
+```
+
+## 2. 燃費の決定要因を探る
+
+### 馬力 vs 燃費
+
+```{python}
+brush = alt.selection_interval()
+
+alt.Chart(cars).mark_circle(size=60).encode(
+    x=alt.X("Horsepower:Q"),
+    y=alt.Y("Miles_per_Gallon:Q", title="MPG"),
+    color="Origin:N",
+    opacity=alt.when(brush).then(alt.value(1)).otherwise(alt.value(0.2)),
+    tooltip=["Name", "Horsepower", "Miles_per_Gallon", "Year"],
+).add_params(brush).properties(
+    width=600, height=400, title="馬力と燃費の関係（ドラッグで選択）"
+)
+```
+
+### 相関分析
+
+```{python}
+num_cols = ["Miles_per_Gallon", "Cylinders", "Displacement", "Horsepower", "Weight_in_lbs", "Acceleration"]
+labels = ["燃費", "気筒数", "排気量", "馬力", "重量", "加速性能"]
+
+corr_matrix = cars.select(pl.col(num_cols).cast(pl.Float64)).corr()
+corr_data = corr_matrix.rename(dict(zip(num_cols, labels))).with_columns(pl.Series("", labels))
+
+(
+    GT(corr_data, rowname_col="")
+    .fmt_number(columns=labels, decimals=2)
+    .data_color(columns=labels, palette=["#2166ac", "#f7f7f7", "#b2182b"], domain=[-1, 1])
+    .tab_header(title="スペック間の相関行列")
+)
+```
+
+重量・排気量・馬力が燃費と強い負の相関を示しています。
+
+## 3. 年代別の燃費トレンド
+
+### 地域×年代の推移
+
+```{python}
+trend = cars.group_by(["Year", "Origin"]).agg(pl.col("Miles_per_Gallon").mean())
+
+alt.Chart(trend).mark_line(point=True).encode(
+    x=alt.X("Year:O", title="年"),
+    y=alt.Y("Miles_per_Gallon:Q", title="平均燃費 (MPG)"),
+    color="Origin:N",
+    tooltip=["Year", "Origin", alt.Tooltip("Miles_per_Gallon:Q", format=".1f")],
+).properties(width=600, height=350, title="年代別 平均燃費の推移")
+```
+
+### 年代別サマリ（ナノプロット付き）
+
+各地域の燃費推移をスパークラインで一覧します。
+
+```{python}
+yearly_avg = (
+    cars.group_by(["Origin", "Year"])
+    .agg(pl.col("Miles_per_Gallon").mean().round(1))
+    .sort("Year")
+)
+
+spark_data = []
+for origin in cars["Origin"].unique().sort().to_list():
+    vals = yearly_avg.filter(pl.col("Origin") == origin)["Miles_per_Gallon"].to_list()
+    line = " ".join(str(v) for v in vals)
+    g = cars.filter(pl.col("Origin") == origin)
+    diff = round(
+        g.filter(pl.col("Year") >= 1978)["Miles_per_Gallon"].mean()
+        - g.filter(pl.col("Year") < 1975)["Miles_per_Gallon"].mean(),
+        1,
+    )
+    spark_data.append({"地域": origin, "燃費推移": line, "後期-前期差": diff})
+
+spark_df = pl.DataFrame(spark_data)
+
+(
+    GT(spark_df)
+    .tab_header(title="地域別 燃費推移スパークライン", subtitle="1970〜1982年の平均燃費")
+    .fmt_nanoplot("燃費推移", plot_type="line")
+    .fmt_number("後期-前期差", decimals=1)
+    .data_color(columns="後期-前期差", palette=["#fee0d2", "#41ab5d"])
+)
+```
+
+## まとめ
+
+- **日本車**は一貫して高い燃費性能を維持し、後期にはさらに改善
+- **米国車**は重量・排気量が大きく燃費が低いが、後期に改善傾向
+- **欧州車**は中間的な位置づけで、バランスの取れたスペック
+- 燃費に最も影響する要因は**車両重量**であり、次いで排気量・馬力が続く
