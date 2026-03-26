@@ -24,10 +24,11 @@ jobs:
         run: |
           uv sync
           uv run ipython kernel install --user --name=quarto_githubpages_sample
+          source .venv/bin/activate
 
       - name: Render and Publish
-        run: |
-          source .venv/bin/activate
-          quarto publish gh-pages --no-browser
+        uses: quarto-dev/quarto-actions/publish@v2
+        with:
+          target: gh-pages
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
