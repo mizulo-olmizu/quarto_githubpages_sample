@@ -1,72 +1,191 @@
 [
   {
-    "objectID": "projects/project_B/src/slide.html#getting-up",
-    "href": "projects/project_B/src/slide.html#getting-up",
-    "title": "Habits",
-    "section": "Getting up",
-    "text": "Getting up\n\nTurn off alarm\nGet out of bed"
-  },
-  {
-    "objectID": "projects/project_B/src/slide.html#breakfast",
-    "href": "projects/project_B/src/slide.html#breakfast",
-    "title": "Habits",
-    "section": "Breakfast",
-    "text": "Breakfast\n\nEat eggs\nDrink coffee"
-  },
-  {
-    "objectID": "projects/project_B/src/slide.html#dinner",
-    "href": "projects/project_B/src/slide.html#dinner",
-    "title": "Habits",
-    "section": "Dinner",
-    "text": "Dinner\n\nEat spaghetti\nDrink wine"
-  },
-  {
-    "objectID": "projects/project_B/src/slide.html#going-to-sleep",
-    "href": "projects/project_B/src/slide.html#going-to-sleep",
-    "title": "Habits",
-    "section": "Going to sleep",
-    "text": "Going to sleep\n\nGet in bed\nCount sheep"
-  },
-  {
-    "objectID": "projects/project_B/src/slide.html#plot",
-    "href": "projects/project_B/src/slide.html#plot",
-    "title": "Habits",
-    "section": "Plot",
-    "text": "Plot\nConfidence Interval Ellipses"
-  },
-  {
-    "objectID": "projects/project_B/index.html",
-    "href": "projects/project_B/index.html",
-    "title": "Project B",
-    "section": "",
-    "text": "複数のページからなるプロジェクトの例です。"
-  },
-  {
-    "objectID": "projects/project_B/index.html#リンク",
-    "href": "projects/project_B/index.html#リンク",
-    "title": "Project B",
-    "section": "1 リンク",
-    "text": "1 リンク\n\nドキュメント\nスライド"
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "分析プロジェクト一覧",
     "section": "",
-    "text": "このサイトでは、私のデータ分析プロジェクトの成果を公開しています。 以下のカードから各分析の詳細を確認できます。\n\n\n\n\n\n\n\n\n\n\n\n\nQuarto Project A\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProject B\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
-  },
-  {
-    "objectID": "projects/project_A/document.html",
-    "href": "projects/project_A/document.html",
-    "title": "Quarto Project A",
-    "section": "",
-    "text": "matplotlibを用いたプロット\n\n\nCode\nimport numpy as np\nimport matplotlib.pyplot as plt\n\nr = np.arange(0, 2, 0.01)\ntheta = 2 * np.pi * r\nfig, ax = plt.subplots(subplot_kw={\"projection\": \"polar\"})\nax.plot(theta, r)\nax.set_rticks([0.5, 1, 1.5, 2])\nax.grid(True)\nplt.show()\n\n\n\n\n\n\n\n\nFigure 1: A line plot on a polar axis"
+    "text": "このサイトでは、私のデータ分析プロジェクトの成果を公開しています。 以下のカードから各分析の詳細を確認できます。\n\n\n\n\n\n\n\n\n\n\n\n\nペンギン種の形態比較分析\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nProject B — 自動車市場の燃費分析\n\n\n\n\n\n\n\n\n\n\n\n\n\nNo matching items"
   },
   {
     "objectID": "projects/project_B/src/document.html",
     "href": "projects/project_B/src/document.html",
-    "title": "Quarto Project B",
+    "title": "自動車市場の燃費分析",
     "section": "",
-    "text": "altairを用いたプロット\n\n\nCode\n# import altair with an abbreviated alias\nimport altair as alt\n\n# load a sample dataset as a pandas DataFrame\nfrom altair.datasets import data\n\ncars = data.cars()\n\n# make the chart\nalt.Chart(cars).mark_point().encode(\n    x=\"Horsepower\",\n    y=\"Miles_per_Gallon\",\n    color=\"Origin\",\n).interactive()\n\n\n\n\n\n\n\n\n\n\nCode\nimport altair as alt\nimport numpy as np\nimport pandas as pd\n\n# Compute x^2 + y^2 across a 2D grid\nx, y = np.meshgrid(range(-5, 5), range(-5, 5))\nz = x**2 + y**2\n\n# Convert this grid to columnar data expected by Altair\nsource = pd.DataFrame({\"x\": x.ravel(), \"y\": y.ravel(), \"z\": z.ravel()})\n\nalt.Chart(source).mark_rect().encode(x=\"x:O\", y=\"y:O\", color=\"z:Q\")"
+    "text": "1970〜80年代の自動車市場では、オイルショックを背景に燃費性能が重要な競争要因となりました。 本分析では、米国・欧州・日本の3地域の自動車データを用いて、以下の問いに答えます。\n\n地域間で燃費にどの程度の差があるか？\n燃費を決定づける要因は何か？\n年代とともに燃費はどう変化したか？\n\n\n\nCode\nimport altair as alt\nimport polars as pl\nfrom great_tables import GT\nfrom vega_datasets import data as vdata\n\ncars = (\n    pl.read_json(vdata.cars.filepath)\n    .with_columns(pl.col(\"Year\").str.slice(0, 4).cast(pl.Int32).alias(\"Year\"))\n    .drop_nulls()\n)"
+  },
+  {
+    "objectID": "projects/project_B/src/document.html#分析の背景と目的",
+    "href": "projects/project_B/src/document.html#分析の背景と目的",
+    "title": "自動車市場の燃費分析",
+    "section": "",
+    "text": "1970〜80年代の自動車市場では、オイルショックを背景に燃費性能が重要な競争要因となりました。 本分析では、米国・欧州・日本の3地域の自動車データを用いて、以下の問いに答えます。\n\n地域間で燃費にどの程度の差があるか？\n燃費を決定づける要因は何か？\n年代とともに燃費はどう変化したか？\n\n\n\nCode\nimport altair as alt\nimport polars as pl\nfrom great_tables import GT\nfrom vega_datasets import data as vdata\n\ncars = (\n    pl.read_json(vdata.cars.filepath)\n    .with_columns(pl.col(\"Year\").str.slice(0, 4).cast(pl.Int32).alias(\"Year\"))\n    .drop_nulls()\n)"
+  },
+  {
+    "objectID": "projects/project_B/src/document.html#地域別の燃費概況",
+    "href": "projects/project_B/src/document.html#地域別の燃費概況",
+    "title": "自動車市場の燃費分析",
+    "section": "2 1. 地域別の燃費概況",
+    "text": "2 1. 地域別の燃費概況\nまず、地域ごとの基本統計量を確認します。\n\n\nCode\nsummary = (\n    cars.group_by(\"Origin\")\n    .agg(\n        pl.col(\"Miles_per_Gallon\").count().alias(\"台数\"),\n        pl.col(\"Miles_per_Gallon\").mean().alias(\"平均燃費\"),\n        pl.col(\"Miles_per_Gallon\").median().alias(\"中央値\"),\n        pl.col(\"Miles_per_Gallon\").min().alias(\"最小\"),\n        pl.col(\"Miles_per_Gallon\").max().alias(\"最大\"),\n        pl.col(\"Horsepower\").mean().alias(\"平均馬力\"),\n        (pl.col(\"Weight_in_lbs\").cast(pl.Float64) * 0.4536).mean().alias(\"平均重量kg\"),\n    )\n    .sort(\"Origin\")\n    .rename({\"Origin\": \"地域\"})\n)\n\n(\n    GT(summary)\n    .tab_header(title=\"地域別 自動車スペック概要\")\n    .fmt_number(columns=[\"平均燃費\", \"中央値\", \"平均馬力\", \"平均重量kg\"], decimals=1)\n    .data_color(columns=\"平均燃費\", palette=[\"#fee0d2\", \"#de2d26\"])\n)\n\n\n\n\n\n\n\n\n地域別 自動車スペック概要\n\n\n地域\n台数\n平均燃費\n中央値\n最小\n最大\n平均馬力\n平均重量kg\n\n\n\n\nEurope\n68\n27.5\n26.0\n16\n44\n80.6\n1,103.8\n\n\nJapan\n79\n30.2\n31.0\n18\n46\n79.8\n1,007.5\n\n\nUSA\n245\n19.9\n18.0\n9\n39\n119.0\n1,529.8\n\n\n\n\n\n\n\n\n日本車が最も燃費に優れ、米国車は馬力・重量ともに大きく燃費が低い傾向が読み取れます。\n\n2.1 燃費の分布\n\n\nCode\nalt.Chart(cars).mark_boxplot(extent=\"min-max\").encode(\n    x=\"Origin:N\",\n    y=alt.Y(\"Miles_per_Gallon:Q\", title=\"Miles per Gallon\"),\n    color=\"Origin:N\",\n).properties(width=400, height=300, title=\"地域別 燃費分布\")"
+  },
+  {
+    "objectID": "projects/project_B/src/document.html#燃費の決定要因を探る",
+    "href": "projects/project_B/src/document.html#燃費の決定要因を探る",
+    "title": "自動車市場の燃費分析",
+    "section": "3 2. 燃費の決定要因を探る",
+    "text": "3 2. 燃費の決定要因を探る\n\n3.1 馬力 vs 燃費\n\n\nCode\nbrush = alt.selection_interval()\n\nalt.Chart(cars).mark_circle(size=60).encode(\n    x=alt.X(\"Horsepower:Q\"),\n    y=alt.Y(\"Miles_per_Gallon:Q\", title=\"MPG\"),\n    color=\"Origin:N\",\n    opacity=alt.when(brush).then(alt.value(1)).otherwise(alt.value(0.2)),\n    tooltip=[\"Name\", \"Horsepower\", \"Miles_per_Gallon\", \"Year\"],\n).add_params(brush).properties(\n    width=600, height=400, title=\"馬力と燃費の関係（ドラッグで選択）\"\n)\n\n\n\n\n\n\n\n\n\n\n3.2 相関分析\n\n\nCode\nnum_cols = [\n    \"Miles_per_Gallon\",\n    \"Cylinders\",\n    \"Displacement\",\n    \"Horsepower\",\n    \"Weight_in_lbs\",\n    \"Acceleration\",\n]\nlabels = [\"燃費\", \"気筒数\", \"排気量\", \"馬力\", \"重量\", \"加速性能\"]\n\ncorr_matrix = cars.select(pl.col(num_cols).cast(pl.Float64)).corr()\ncorr_data = corr_matrix.rename(dict(zip(num_cols, labels))).with_columns(\n    pl.Series(\"\", labels)\n)\n\n(\n    GT(corr_data, rowname_col=\"\")\n    .fmt_number(columns=labels, decimals=2)\n    .data_color(\n        columns=labels, palette=[\"#2166ac\", \"#f7f7f7\", \"#b2182b\"], domain=[-1, 1]\n    )\n    .tab_header(title=\"スペック間の相関行列\")\n)\n\n\n\n\n\n\n\n\nスペック間の相関行列\n\n\n\n燃費\n気筒数\n排気量\n馬力\n重量\n加速性能\n\n\n\n\n燃費\n1.00\n−0.78\n−0.81\n−0.78\n−0.84\n0.42\n\n\n気筒数\n−0.78\n1.00\n0.95\n0.84\n0.90\n−0.50\n\n\n排気量\n−0.81\n0.95\n1.00\n0.90\n0.93\n−0.54\n\n\n馬力\n−0.78\n0.84\n0.90\n1.00\n0.86\n−0.69\n\n\n重量\n−0.84\n0.90\n0.93\n0.86\n1.00\n−0.42\n\n\n加速性能\n0.42\n−0.50\n−0.54\n−0.69\n−0.42\n1.00\n\n\n\n\n\n\n\n\n重量・排気量・馬力が燃費と強い負の相関を示しています。"
+  },
+  {
+    "objectID": "projects/project_B/src/document.html#年代別の燃費トレンド",
+    "href": "projects/project_B/src/document.html#年代別の燃費トレンド",
+    "title": "自動車市場の燃費分析",
+    "section": "4 3. 年代別の燃費トレンド",
+    "text": "4 3. 年代別の燃費トレンド\n\n4.1 地域×年代の推移\n\n\nCode\ntrend = cars.group_by([\"Year\", \"Origin\"]).agg(pl.col(\"Miles_per_Gallon\").mean())\n\nalt.Chart(trend).mark_line(point=True).encode(\n    x=alt.X(\"Year:O\", title=\"年\"),\n    y=alt.Y(\"Miles_per_Gallon:Q\", title=\"平均燃費 (MPG)\"),\n    color=\"Origin:N\",\n    tooltip=[\"Year\", \"Origin\", alt.Tooltip(\"Miles_per_Gallon:Q\", format=\".1f\")],\n).properties(width=600, height=350, title=\"年代別 平均燃費の推移\")\n\n\n\n\n\n\n\n\n\n\n4.2 年代別サマリ（ナノプロット付き）\n各地域の燃費推移をスパークラインで一覧します。\n\n\nCode\nyearly_avg = (\n    cars.group_by([\"Origin\", \"Year\"])\n    .agg(pl.col(\"Miles_per_Gallon\").mean().round(1))\n    .sort(\"Year\")\n)\n\nspark_data = []\nfor origin in cars[\"Origin\"].unique().sort().to_list():\n    vals = yearly_avg.filter(pl.col(\"Origin\") == origin)[\"Miles_per_Gallon\"].to_list()\n    line = \" \".join(str(v) for v in vals)\n    g = cars.filter(pl.col(\"Origin\") == origin)\n    diff = round(\n        g.filter(pl.col(\"Year\") &gt;= 1978)[\"Miles_per_Gallon\"].mean()\n        - g.filter(pl.col(\"Year\") &lt; 1975)[\"Miles_per_Gallon\"].mean(),\n        1,\n    )\n    spark_data.append({\"地域\": origin, \"燃費推移\": line, \"後期-前期差\": diff})\n\nspark_df = pl.DataFrame(spark_data)\n\n(\n    GT(spark_df)\n    .tab_header(\n        title=\"地域別 燃費推移スパークライン\", subtitle=\"1970〜1982年の平均燃費\"\n    )\n    .fmt_nanoplot(\"燃費推移\", plot_type=\"line\")\n    .fmt_number(\"後期-前期差\", decimals=1)\n    .data_color(columns=\"後期-前期差\", palette=[\"#fee0d2\", \"#41ab5d\"])\n)\n\n\n\n\n\n\n\n\n\n\n\n\n\n地域別 燃費推移スパークライン\n\n\n1970〜1982年の平均燃費\n\n\n地域\n燃費推移\n後期-前期差\n\n\n\n\nEurope\n\n\n36.522.025.228.822.024.027.024.524.129.024.730.036.534.2\n\n\n6.6\n\n\nJapan\n\n\n34.920.025.529.524.220.029.327.528.027.229.232.534.933.6\n\n\n7.1\n\n\nUSA\n\n\n28.715.015.317.716.315.018.117.619.220.421.423.026.028.7\n\n\n8.7"
+  },
+  {
+    "objectID": "projects/project_B/src/document.html#まとめ",
+    "href": "projects/project_B/src/document.html#まとめ",
+    "title": "自動車市場の燃費分析",
+    "section": "5 まとめ",
+    "text": "5 まとめ\n\n日本車は一貫して高い燃費性能を維持し、後期にはさらに改善\n米国車は重量・排気量が大きく燃費が低いが、後期に改善傾向\n欧州車は中間的な位置づけで、バランスの取れたスペック\n燃費に最も影響する要因は車両重量であり、次いで排気量・馬力が続く"
+  },
+  {
+    "objectID": "projects/project_A/document.html",
+    "href": "projects/project_A/document.html",
+    "title": "ペンギン種の形態比較分析",
+    "section": "",
+    "text": "パーマー基地周辺に生息する3種のペンギン（Adelie・Chinstrap・Gentoo）の形態データを用いて、 種ごとの身体的特徴の違いを明らかにします。\n\n種ごとの体格差はどの程度か？\nくちばしの形状で種を判別できるか？\n体重と各部位のサイズにはどのような関係があるか？\n\n\n\nCode\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\nplt.rcParams[\"font.family\"] = \"Hiragino Sans\"\nsns.set_theme(style=\"whitegrid\", rc={\"font.family\": \"Hiragino Sans\"})\npenguins = sns.load_dataset(\"penguins\").dropna()"
+  },
+  {
+    "objectID": "projects/project_A/document.html#分析の背景と目的",
+    "href": "projects/project_A/document.html#分析の背景と目的",
+    "title": "ペンギン種の形態比較分析",
+    "section": "",
+    "text": "パーマー基地周辺に生息する3種のペンギン（Adelie・Chinstrap・Gentoo）の形態データを用いて、 種ごとの身体的特徴の違いを明らかにします。\n\n種ごとの体格差はどの程度か？\nくちばしの形状で種を判別できるか？\n体重と各部位のサイズにはどのような関係があるか？\n\n\n\nCode\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns\n\nplt.rcParams[\"font.family\"] = \"Hiragino Sans\"\nsns.set_theme(style=\"whitegrid\", rc={\"font.family\": \"Hiragino Sans\"})\npenguins = sns.load_dataset(\"penguins\").dropna()"
+  },
+  {
+    "objectID": "projects/project_A/document.html#種ごとの体格概況",
+    "href": "projects/project_A/document.html#種ごとの体格概況",
+    "title": "ペンギン種の形態比較分析",
+    "section": "2 1. 種ごとの体格概況",
+    "text": "2 1. 種ごとの体格概況\n\n2.1 データの概要\n\n\nCode\npenguins.groupby(\"species\")[\n    [\"bill_length_mm\", \"bill_depth_mm\", \"flipper_length_mm\", \"body_mass_g\"]\n].describe().round(1)\n\n\n\n\n\n\n\n\n\nbill_length_mm\nbill_depth_mm\n...\nflipper_length_mm\nbody_mass_g\n\n\n\ncount\nmean\nstd\nmin\n25%\n50%\n75%\nmax\ncount\nmean\n...\n75%\nmax\ncount\nmean\nstd\nmin\n25%\n50%\n75%\nmax\n\n\nspecies\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nAdelie\n146.0\n38.8\n2.7\n32.1\n36.7\n38.8\n40.8\n46.0\n146.0\n18.3\n...\n195.0\n210.0\n146.0\n3706.2\n458.6\n2850.0\n3362.5\n3700.0\n4000.0\n4775.0\n\n\nChinstrap\n68.0\n48.8\n3.3\n40.9\n46.4\n49.6\n51.1\n58.0\n68.0\n18.4\n...\n201.0\n212.0\n68.0\n3733.1\n384.3\n2700.0\n3487.5\n3700.0\n3950.0\n4800.0\n\n\nGentoo\n119.0\n47.6\n3.1\n40.9\n45.3\n47.4\n49.6\n59.6\n119.0\n15.0\n...\n221.5\n231.0\n119.0\n5092.4\n501.5\n3950.0\n4700.0\n5050.0\n5500.0\n6300.0\n\n\n\n\n3 rows × 32 columns\n\n\n\n\n\n2.2 体重の分布\n\n\nCode\nfig, ax = plt.subplots(figsize=(8, 4))\nsns.violinplot(data=penguins, x=\"species\", y=\"body_mass_g\", hue=\"species\", ax=ax)\nax.set_xlabel(\"種\")\nax.set_ylabel(\"体重 (g)\")\nax.set_title(\"種ごとの体重分布\")\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n種ごとの体重分布\n\n\n\n\nGentooが最も大型で、AdelieとChinstrapは同程度の体重です。"
+  },
+  {
+    "objectID": "projects/project_A/document.html#くちばしの形状による種の判別",
+    "href": "projects/project_A/document.html#くちばしの形状による種の判別",
+    "title": "ペンギン種の形態比較分析",
+    "section": "3 2. くちばしの形状による種の判別",
+    "text": "3 2. くちばしの形状による種の判別\nくちばしの長さと深さの関係を見ると、3種が明確に分離します。\n\n\nCode\nfig, ax = plt.subplots(figsize=(8, 6))\nsns.scatterplot(\n    data=penguins,\n    x=\"bill_length_mm\",\n    y=\"bill_depth_mm\",\n    hue=\"species\",\n    style=\"species\",\n    s=60,\n    ax=ax,\n)\nax.set_xlabel(\"くちばし長さ (mm)\")\nax.set_ylabel(\"くちばし深さ (mm)\")\nax.set_title(\"くちばしの形状による種の分離\")\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nくちばしの長さ vs 深さ\n\n\n\n\n\n3.1 種ごとのくちばし形状分布\n\n\nCode\ng = sns.jointplot(\n    data=penguins,\n    x=\"bill_length_mm\",\n    y=\"bill_depth_mm\",\n    hue=\"species\",\n    kind=\"kde\",\n    height=6,\n)\ng.set_axis_labels(\"くちばし長さ (mm)\", \"くちばし深さ (mm)\")\nplt.suptitle(\"種ごとのくちばし形状 KDE\", y=1.02)\nplt.show()\n\n\n\n\n\nくちばしの長さ・深さの同時分布\n\n\n\n\n\nAdelie: 短く深いくちばし\nChinstrap: 長く深いくちばし\nGentoo: 長く浅いくちばし"
+  },
+  {
+    "objectID": "projects/project_A/document.html#体重と各部位の関係",
+    "href": "projects/project_A/document.html#体重と各部位の関係",
+    "title": "ペンギン種の形態比較分析",
+    "section": "4 3. 体重と各部位の関係",
+    "text": "4 3. 体重と各部位の関係\n\n4.1 ペアプロット\n\n\nCode\ng = sns.pairplot(\n    penguins,\n    vars=[\"bill_length_mm\", \"bill_depth_mm\", \"flipper_length_mm\", \"body_mass_g\"],\n    hue=\"species\",\n    height=2.2,\n    plot_kws={\"s\": 20, \"alpha\": 0.6},\n)\ng.figure.suptitle(\"形態変数のペアプロット\", y=1.01)\nplt.show()\n\n\n\n\n\n形態変数のペアプロット\n\n\n\n\n\n\n4.2 フリッパー長 vs 体重\n\n\nCode\nfig, ax = plt.subplots(figsize=(8, 5))\nsns.regplot(\n    data=penguins,\n    x=\"flipper_length_mm\",\n    y=\"body_mass_g\",\n    scatter=False,\n    color=\"gray\",\n    ax=ax,\n)\nsns.scatterplot(\n    data=penguins, x=\"flipper_length_mm\", y=\"body_mass_g\", hue=\"species\", s=50, ax=ax\n)\nax.set_xlabel(\"フリッパー長 (mm)\")\nax.set_ylabel(\"体重 (g)\")\nax.set_title(\"フリッパー長と体重：強い正の相関\")\nplt.tight_layout()\nplt.show()\n\n\n\n\n\nフリッパー長と体重の関係\n\n\n\n\n\n\n4.3 相関ヒートマップ\n\n\nCode\nnum_cols = [\"bill_length_mm\", \"bill_depth_mm\", \"flipper_length_mm\", \"body_mass_g\"]\nlabels = [\"くちばし長\", \"くちばし深\", \"フリッパー長\", \"体重\"]\ncorr = penguins[num_cols].corr()\ncorr.index = labels\ncorr.columns = labels\n\nfig, ax = plt.subplots(figsize=(6, 5))\nsns.heatmap(\n    corr, annot=True, fmt=\".2f\", cmap=\"RdBu_r\", vmin=-1, vmax=1, square=True, ax=ax\n)\nax.set_title(\"形態変数間の相関\")\nplt.tight_layout()\nplt.show()\n\n\n\n\n\n形態変数間の相関行列"
+  },
+  {
+    "objectID": "projects/project_A/document.html#まとめ",
+    "href": "projects/project_A/document.html#まとめ",
+    "title": "ペンギン種の形態比較分析",
+    "section": "5 まとめ",
+    "text": "5 まとめ\n\nGentooは大型で、フリッパーが長く、くちばしが浅い\nAdelieは小型で、くちばしが短く深い\nChinstrapはAdelieに近い体格だが、くちばしが長い\nくちばしの長さ×深さだけで3種をほぼ判別可能\nフリッパー長と体重には強い正の相関がある"
+  },
+  {
+    "objectID": "projects/project_B/index.html#概要",
+    "href": "projects/project_B/index.html#概要",
+    "title": "Project B — 自動車市場の燃費分析",
+    "section": "1 概要",
+    "text": "1 概要\n1970〜80年代の米国・欧州・日本の自動車データ（406台）を用いて、地域間の燃費差・決定要因・年代トレンドを分析しました。"
+  },
+  {
+    "objectID": "projects/project_B/index.html#使用技術",
+    "href": "projects/project_B/index.html#使用技術",
+    "title": "Project B — 自動車市場の燃費分析",
+    "section": "2 使用技術",
+    "text": "2 使用技術\n\n\n\nカテゴリ\nツール\n\n\n\n\nデータ処理\nPolars\n\n\n可視化\nAltair（インタラクティブ）\n\n\nテーブル\nGreat Tables（ナノプロット）\n\n\n統計\nSciPy"
+  },
+  {
+    "objectID": "projects/project_B/index.html#コンテンツ",
+    "href": "projects/project_B/index.html#コンテンツ",
+    "title": "Project B — 自動車市場の燃費分析",
+    "section": "3 コンテンツ",
+    "text": "3 コンテンツ\n\n📄 分析ドキュメント — 燃費の地域比較・相関分析・年代トレンドをインタラクティブに解説\n📊 スライド — 分析結果のプレゼンテーション資料"
+  },
+  {
+    "objectID": "projects/project_B/index.html#主な知見",
+    "href": "projects/project_B/index.html#主な知見",
+    "title": "Project B — 自動車市場の燃費分析",
+    "section": "4 主な知見",
+    "text": "4 主な知見\n\n日本車が最も燃費に優れ、後期にさらに改善\n燃費に最も影響する要因は車両重量\nくちばしの長さ×深さだけで3種をほぼ判別可能\n全地域で1970年代後半以降に燃費が改善傾向"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#背景",
+    "href": "projects/project_B/src/slide.html#背景",
+    "title": "自動車市場の燃費分析",
+    "section": "背景",
+    "text": "背景\n\n1970〜80年代、オイルショックにより燃費性能が重要な競争要因に\n米国・欧州・日本の3地域で異なる設計思想"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#分析の問い",
+    "href": "projects/project_B/src/slide.html#分析の問い",
+    "title": "自動車市場の燃費分析",
+    "section": "分析の問い",
+    "text": "分析の問い\n\n地域間で燃費にどの程度の差があるか？\n燃費を決定づける要因は何か？\n年代とともに燃費はどう変化したか？"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#基本統計量",
+    "href": "projects/project_B/src/slide.html#基本統計量",
+    "title": "自動車市場の燃費分析",
+    "section": "基本統計量",
+    "text": "基本統計量\n\n\n\n\n\n\n\n\n地域別 自動車スペック概要\n\n\n地域\n台数\n平均燃費\n中央値\n平均馬力\n平均重量kg\n\n\n\n\nEurope\n68\n27.5\n26.0\n80.6\n1,103.8\n\n\nJapan\n79\n30.2\n31.0\n79.8\n1,007.5\n\n\nUSA\n245\n19.9\n18.0\n119.0\n1,529.8"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#燃費の分布",
+    "href": "projects/project_B/src/slide.html#燃費の分布",
+    "title": "自動車市場の燃費分析",
+    "section": "燃費の分布",
+    "text": "燃費の分布\n\n\n\n日本車が最も燃費に優れる\n米国車は馬力・重量が大きく燃費が低い\n欧州車は中間的な位置づけ"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#馬力-vs-燃費",
+    "href": "projects/project_B/src/slide.html#馬力-vs-燃費",
+    "title": "自動車市場の燃費分析",
+    "section": "馬力 vs 燃費",
+    "text": "馬力 vs 燃費"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#相関分析",
+    "href": "projects/project_B/src/slide.html#相関分析",
+    "title": "自動車市場の燃費分析",
+    "section": "相関分析",
+    "text": "相関分析\n\n\n\n\n\n\n\n\nスペック間の相関行列\n\n\n\n燃費\n気筒数\n排気量\n馬力\n重量\n加速性能\n\n\n\n\n燃費\n1.00\n−0.78\n−0.81\n−0.78\n−0.84\n0.42\n\n\n気筒数\n−0.78\n1.00\n0.95\n0.84\n0.90\n−0.50\n\n\n排気量\n−0.81\n0.95\n1.00\n0.90\n0.93\n−0.54\n\n\n馬力\n−0.78\n0.84\n0.90\n1.00\n0.86\n−0.69\n\n\n重量\n−0.84\n0.90\n0.93\n0.86\n1.00\n−0.42\n\n\n加速性能\n0.42\n−0.50\n−0.54\n−0.69\n−0.42\n1.00"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#要因のまとめ",
+    "href": "projects/project_B/src/slide.html#要因のまとめ",
+    "title": "自動車市場の燃費分析",
+    "section": "要因のまとめ",
+    "text": "要因のまとめ\n\n燃費と最も強い負の相関：車両重量\n次いで排気量・馬力が続く\n加速性能は燃費と正の相関（軽い車ほど加速も良い）"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#地域年代の推移",
+    "href": "projects/project_B/src/slide.html#地域年代の推移",
+    "title": "自動車市場の燃費分析",
+    "section": "地域×年代の推移",
+    "text": "地域×年代の推移"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#燃費推移スパークライン",
+    "href": "projects/project_B/src/slide.html#燃費推移スパークライン",
+    "title": "自動車市場の燃費分析",
+    "section": "燃費推移スパークライン",
+    "text": "燃費推移スパークライン\n\n\n\n\n\n\n\n\n\n\n\n\n\n地域別 燃費推移\n\n\n1970〜1982年\n\n\n地域\n燃費推移\n後期-前期差\n\n\n\n\nEurope\n\n\n36.522.025.228.822.024.027.024.524.129.024.730.036.534.2\n\n\n6.6\n\n\nJapan\n\n\n34.920.025.529.524.220.029.327.528.027.229.232.534.933.6\n\n\n7.1\n\n\nUSA\n\n\n28.715.015.317.716.315.018.117.619.220.421.423.026.028.7\n\n\n8.7"
+  },
+  {
+    "objectID": "projects/project_B/src/slide.html#結論",
+    "href": "projects/project_B/src/slide.html#結論",
+    "title": "自動車市場の燃費分析",
+    "section": "結論",
+    "text": "結論\n\n日本車：一貫して高い燃費性能、後期にさらに改善\n米国車：重量・排気量が大きく燃費が低いが、後期に改善傾向\n欧州車：中間的な位置づけ、バランスの取れたスペック\n燃費に最も影響する要因は車両重量"
   }
 ]

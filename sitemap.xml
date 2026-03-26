@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_B/src/slide.html</loc>
-    <lastmod>2026-03-02T01:10:33.061Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_B/index.html</loc>
-    <lastmod>2026-03-02T01:10:33.060Z</lastmod>
-  </url>
-  <url>
     <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/index.html</loc>
-    <lastmod>2026-03-02T01:10:33.060Z</lastmod>
-  </url>
-  <url>
-    <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_A/document.html</loc>
-    <lastmod>2026-03-02T01:10:33.060Z</lastmod>
+    <lastmod>2026-03-26T18:20:29.930Z</lastmod>
   </url>
   <url>
     <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_B/src/document.html</loc>
-    <lastmod>2026-03-02T01:10:33.061Z</lastmod>
+    <lastmod>2026-03-26T18:20:29.975Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_A/document.html</loc>
+    <lastmod>2026-03-26T18:20:29.931Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_B/index.html</loc>
+    <lastmod>2026-03-26T18:20:29.974Z</lastmod>
+  </url>
+  <url>
+    <loc>https://mizulo-olmizu.github.io/quarto_githubpages_sample/projects/project_B/src/slide.html</loc>
+    <lastmod>2026-03-26T18:20:29.975Z</lastmod>
   </url>
 </urlset>
